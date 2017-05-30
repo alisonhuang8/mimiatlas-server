@@ -20,7 +20,7 @@ exports.processRequest = function(request) {
      *
      * @param imageItem an object representing the image that was found.
      */
-    let imageCallback = function(imageItem) {
+    let crawlerImageCallback = function(imageItem) {
         // TODO update the database and pass stuff to image processor.
         maybeDone = false;
         console.log(imageItem);
@@ -40,9 +40,10 @@ exports.processRequest = function(request) {
         }
     }
 
+    let crawler = Crawler(domain, crawlerImageCallback, completionCallback);
+
     if (requestIsGood(domain, username)) {
         // TODO Add to database and start the crawling.
-        crawler = Crawler(domain, imageCallback, completionCallback);
         crawler.start();
         return true;
     } else {
