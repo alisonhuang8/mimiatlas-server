@@ -1,3 +1,5 @@
+var Crawler = require('../crawler/crawler');
+
 /**
  * Processes the request sent in by the user.
  *
@@ -9,8 +11,18 @@ exports.processRequest = function(request) {
     let domain = request.body.domain;
     let username = request.body.username;
 
+    let imageCallback = function(imageItem) {
+        console.log(imageItem);
+    }
+
+    let completionCallback = function() {
+        console.log("I'm done!");
+    }
+
     if (requestIsGood(domain, username)) {
         // TODO Add to database and start the crawling.
+        crawler = Crawler(domain, imageCallback, completionCallback);
+        crawler.start();
         return true;
     } else {
         return false;

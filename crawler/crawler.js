@@ -6,28 +6,25 @@ var jsonfile = require('jsonfile');
  * started, an event will be fired each time a new image is added to the queue.
  *
  * @param domain a domain name in the form www.example.com (http is inferred)
- * @param addBroadCaster the event emmitter to ping when a url is added to the
- * queue.
+ * @param imageCallback a procedure that consumes a queueItem for an image. This
+ * will be called each time a new image url is discovered.
+ * @param completionCallback a procedure that will be called once all urls have
+ * been discovered.
  *
  * @return a new crawler object for the passed in domain.
  */
-var crawler = function(domain, addBroadCaster) {
-
-    var files = 'also_urls.json';
-
-    var imageItems = [];
+var crawler = function(domain, imageCallback, completionCallback) {
 
     var imageRegex = /\.(png|bmp|tiff|jpg|jpeg)$/i
 
-    var simplecrawler = Crawler("http://ultimatesoftware.com/")
+    var simplecrawler = Crawler("http://" + domain)
     .on("queueadd", function (queueItem) {
         var url = queueItem.url;
-        if (url.match(imageRegex)) {
-            imageItems.push(queueItem);
-            jsonfile.writeFileSync(files, imageItems);
-            addBroadCaster.emit('added');
+        if (imageRegex.test(url)) {
+            imageCallback(queueItem);
         }
     })
+    .on('complete', completionCallback);
 
     var conditionID = simplecrawler.addDownloadCondition(function(queueItem, response, callback) {
         callback(null,
@@ -51,3 +48,5 @@ var crawler = function(domain, addBroadCaster) {
         start: simplecrawler.start
     };
 };
+
+module.exports = crawler;
