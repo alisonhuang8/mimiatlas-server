@@ -24,7 +24,7 @@ exports.processRequest = function(request) {
  * @param username the username sent in the request.
  */
 var requestIsGood = function(domain, username) {
-    let domainRegex = 
+    let domainRegex =
         /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/i;
     let usernameRegex = /^[a-zA-Z0-9_]+$/i
     return domain && domainRegex.test(domain)
