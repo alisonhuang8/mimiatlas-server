@@ -11,12 +11,33 @@ exports.processRequest = function(request) {
     let domain = request.body.domain;
     let username = request.body.username;
 
+    let maybeDone = false;
+
+    /**
+     * Called each time the crawler finds a new image. Updates the database, and
+     * will pass the url to the image processor. Also sets maybeDone to false.
+     * ImageItem.url will give the url of the image.
+     *
+     * @param imageItem an object representing the image that was found.
+     */
     let imageCallback = function(imageItem) {
+        // TODO update the database and pass stuff to image processor.
+        maybeDone = false;
         console.log(imageItem);
     }
 
+    /**
+     * Called when the crawler finds all of the urls on the site, and also when
+     * the image processor has finished all of its jobs. If maybeDone is true,
+     * this means that the website has been fully scanned. Otherwise, maybeDone
+     * will be set to be true.
+     */
     let completionCallback = function() {
-        console.log("I'm done!");
+        if (maybeDone) {
+            // TODO some code in here
+        } else {
+            maybeDone = true;
+        }
     }
 
     if (requestIsGood(domain, username)) {
