@@ -42,10 +42,11 @@ var crawler = function(domain, imageCallback, completionCallback) {
 
     simplecrawler.interval = 0;
 
-    simplecrawler.start();
-
     return {
-        start: simplecrawler.start
+        start: function() {
+                   simplecrawler.start();
+               }
+
     };
 };
 

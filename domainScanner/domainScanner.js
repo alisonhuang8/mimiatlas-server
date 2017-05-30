@@ -1,4 +1,5 @@
 var Crawler = require('../crawler/crawler');
+var ImageProcessor = require('../imageProcessor/imageProcessor');
 
 /**
  * Processes the request sent in by the user.
