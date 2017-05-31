@@ -5,6 +5,7 @@ var schema = new mongoose.Schema({
     domainUrl: String,
     user: String,
     data: Object,
+    stats: Object,
     created: {
         type: Date,
         default: new Date()
@@ -13,5 +14,5 @@ var schema = new mongoose.Schema({
 
 
 // Model
-var model = mongoose.model('Urls', schema);
+var model = mongoose.model('Url', schema);
 module.exports = model;

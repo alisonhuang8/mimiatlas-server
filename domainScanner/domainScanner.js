@@ -23,22 +23,20 @@ exports.processRequest = function(request) {
      * @param imageItem an object representing the image that was found.
      */
     let crawlerImageCallback = function(imageItem) {
-        // TODO update the database and pass stuff to image processor.
         maybeDone = false;
-				// Url.create({
-				// 	//Set the properties here
-				// 	domainUrl: "http://ultimatesoftware.com/",
-				// 	user: username,
-				// 	url: "us.com/coolimage.jpg",
-				// 	data: imageItem,
-				// 	stats: {}
-				// }, function(err, user) {
-				// 	if (err)
-				// 		return console.log("Oh no!", err);
-				// 	//YAY IT WORKED
-				// Call Alisons thing for more processing
-				// });
-        console.log(imageItem);
+        Url.create({
+            domainUrl: domain,
+            user: username,
+            data: imageItem,
+            stats: {}
+        }, function(err, url) {
+            if (err) {
+                // TODO add better error logging
+                console.log("Oh no!", err);
+            } else {
+                console.log(url);
+            }
+        });
     }
 
     /**

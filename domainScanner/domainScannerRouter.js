@@ -18,8 +18,6 @@ router.use(bodyParser.urlencoded({extended: true}));
 // }
 
 var badRequest = function(response) {
-	// TODO make this send the status in the header instead of in the response
-	// body.
 	response.status(400).send('Bad Request\n');
 }
 
