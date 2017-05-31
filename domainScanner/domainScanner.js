@@ -1,7 +1,7 @@
 var Crawler = require('../crawler/crawler');
 var ImageProcessor = require('../imageProcessor/imageProcessor');
-var Url = require('../models/url.model')
-var Domain = require('../models/domain.model');
+var Url = require('../database/mongo/models/url.model')
+var Domain = require('../database/mongo/models/domain.model');
 
 /**
  * Processes the request sent in by the user.
@@ -45,13 +45,15 @@ exports.processRequest = function(request) {
      * on the image processor so that it finishes up its queue and terminates.
      */
     let completionCallback = function() {
+        // TODO stop the image processor
     }
 
     if (requestIsGood(domain, username)) {
-        imageProcessor = ImageProcessor();
+        // imageProcessor = ImageProcessor();
         crawler = Crawler(domain, crawlerImageCallback, completionCallback);
         crawler.start();
-        imageProcessor.start();
+        // TODO start the image processor
+        // imageProcessor.start();
         return true;
     } else {
         return false;
