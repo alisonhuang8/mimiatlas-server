@@ -1,6 +1,7 @@
 var Crawler = require('../crawler/crawler');
 var ImageProcessor = require('../imageProcessor/imageProcessor');
 var Url = require('../models/url.model')
+var Domain = require('../models/domain.model');
 
 /**
  * Processes the request sent in by the user.
@@ -12,8 +13,8 @@ var Url = require('../models/url.model')
 exports.processRequest = function(request) {
     let domain = request.body.domain;
     let username = request.body.username;
-
-    let maybeDone = false;
+    let crawler;
+    let imageProcessor;
 
     /**
      * Called each time the crawler finds a new image. Updates the database, and
@@ -23,7 +24,6 @@ exports.processRequest = function(request) {
      * @param imageItem an object representing the image that was found.
      */
     let crawlerImageCallback = function(imageItem) {
-        maybeDone = false;
         Url.create({
             domainUrl: domain,
             user: username,
@@ -34,30 +34,24 @@ exports.processRequest = function(request) {
                 // TODO add better error logging
                 console.log("Oh no!", err);
             } else {
+                // TODO call Alison's thing instead
                 console.log(url);
             }
         });
     }
 
     /**
-     * Called when the crawler finds all of the urls on the site, and also when
-     * the image processor has finished all of its jobs. If maybeDone is true,
-     * this means that the website has been fully scanned. Otherwise, maybeDone
-     * will be set to be true.
+     * Called when the crawler finds all of the urls on the site. Will call stop
+     * on the image processor so that it finishes up its queue and terminates.
      */
     let completionCallback = function() {
-        if (maybeDone) {
-            // TODO some code in here
-        } else {
-            maybeDone = true;
-        }
     }
 
-    let crawler = Crawler(domain, crawlerImageCallback, completionCallback);
-
     if (requestIsGood(domain, username)) {
-        // TODO Add to database and start the crawling.
+        crawler = Crawler(domain, crawlerImageCallback, completionCallback);
+        imageProcessor = ImageProcessor();
         crawler.start();
+        imageProcessor.start();
         return true;
     } else {
         return false;
@@ -72,7 +66,7 @@ exports.processRequest = function(request) {
  */
 var requestIsGood = function(domain, username) {
     let domainRegex =
-        /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/i;
+        /^http(s?):\/\/[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/i;
     let usernameRegex = /^[a-zA-Z0-9_]+$/i
     return domain && domainRegex.test(domain)
         && username && usernameRegex.test(username);
