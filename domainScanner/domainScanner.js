@@ -18,8 +18,8 @@ exports.processRequest = function(request) {
 
     /**
      * Called each time the crawler finds a new image. Updates the database, and
-     * will pass the url to the image processor. Also sets maybeDone to false.
-     * ImageItem.url will give the url of the image.
+     * will pass the url to the image processor. ImageItem.url will give the url
+     * of the image.
      *
      * @param imageItem an object representing the image that was found.
      */
@@ -48,8 +48,8 @@ exports.processRequest = function(request) {
     }
 
     if (requestIsGood(domain, username)) {
-        crawler = Crawler(domain, crawlerImageCallback, completionCallback);
         imageProcessor = ImageProcessor();
+        crawler = Crawler(domain, crawlerImageCallback, completionCallback);
         crawler.start();
         imageProcessor.start();
         return true;
